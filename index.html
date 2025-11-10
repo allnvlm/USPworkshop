@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USP ja Storytelling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB; /* Very light gray, almost white */
+            color: #1F2937; /* Darker gray for primary text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container-full {
+            max-width: 100%;
+            padding: 0;
+        }
+        .slide {
+            min-height: 100vh;
+            padding: 4rem 2rem; /* Increased vertical padding */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #E5E7EB; /* Lighter border */
+            text-align: center;
+            background-color: #FFFFFF; /* Default white background for all slides */
+            position: relative; /* Needed for absolute positioning of background container and logo */
+            overflow: hidden; /* Hide overflowing background */
+        }
+        .slide.bg-accent { /* Optional accent background for specific slides if needed, e.g. intro/outro */
+             background-color: #F9FAFB;
+        }
+
+        /* Container for hero background image */
+        .hero-background-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind content */
+            /* KOHT TAUSTAPILDI JAOKS - LISA OMA CSS SIIA
+                Näide:
+                background-image: url('https://placehold.co/1920x1080/E0F2FE/0C4A6E?text=Taustapilt&font=Inter'); 
+                background-size: cover;
+                background-position: center center;
+                opacity: 0.1; /* Kohanda läbipaistvust vastavalt vajadusele, et tekst oleks loetav */
+            */
+        }
+        .hero-background-image-container::before { /* Valikuline: värvikiht pildi peal */
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Näide värvikihist:
+                background-color: rgba(255, 255, 255, 0.7); /* Hele kiht */
+                /* background-color: rgba(0, 51, 102, 0.5); /* Tumesinine kiht */
+            */
+        }
+
+
+        .slide-content {
+            max-width: 56rem; /* Slightly narrower for better readability on wider screens */
+            width: 100%;
+            margin: 0 auto;
+            position: relative; /* Ensure content is above background */
+            z-index: 1;
+        }
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        /* Standardized heading styles for content blocks */
+        .content-title { /* Replaces old h2/h3 for main block titles */
+            font-size: 1.875rem; /* Tailwind text-2xl */
+            font-weight: 600;
+            line-height: 1.3;
+            color: #111827; /* Darkest gray */
+            margin-bottom: 1.5rem;
+        }
+        .hero-title { /* For the new hello slide title */
+            font-size: 2.5rem; /* Tailwind text-4xl or similar */
+            font-weight: 700;
+            line-height: 1.2;
+            color: #111827; /* Darkest gray */
+            margin-bottom: 1rem;
+        }
+        .hero-slogan {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 400;
+            color: #374151; /* Medium gray */
+            margin-bottom: 2rem;
+            text-align: center; /* Centered slogan */
+        }
+         .hero-name {
+            font-size: 1.125rem; /* Tailwind text-lg */
+            font-weight: 500;
+            color: #1F2937;
+            margin-top: 2.5rem;
+        }
+        .hero-linkedin {
+            font-size: 1rem;
+            color: #3B82F6; /* Blue for link */
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .hero-linkedin:hover {
+            text-decoration: underline;
+        }
+        .hero-logo {
+            position: absolute;
+            bottom: 2rem; /* Adjust as needed */
+            right: 2rem; /* Adjust as needed */
+            z-index: 2; /* Ensure logo is above background but can be below other elements if needed */
+        }
+        .hero-logo img {
+            max-height: 50px; /* Adjust max height as needed */
+            width: auto;
+        }
+
+
+        .section-subtitle { /* For sub-sections or important instructions */
+            font-size: 1.25rem; /* Tailwind text-xl */
+            font-weight: 500;
+            color: #374151; /* Medium gray */
+            margin-bottom: 1rem;
+        }
+        
+        .prompt-group-title { /* For titles above prompt tabs/boxes */
+            font-size: 1.125rem; /* Tailwind text-lg */
+            font-weight: 500;
+            color: #1F2937;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            text-align: left;
+        }
+
+        p, li {
+            font-size: 1rem; /* Tailwind text-base */
+            line-height: 1.75;
+            color: #4B5563; /* Medium-light gray for body text */
+            margin-bottom: 1rem;
+            text-align: left; /* Default text align to left for readability */
+        }
+        ul.custom-list {
+            padding-left: 1.25rem; /* Indent list */
+        }
+        ul.custom-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-box {
+            background-color: #EFF6FF; /* Tailwind blue-50 */
+            border: 1px solid #DBEAFE; /* Tailwind blue-200 */
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            text-align: left;
+            font-size: 0.95rem;
+            color: #1E3A8A; /* Tailwind blue-800 */
+        }
+        .intro-box p {
+            color: #1E3A8A;
+            font-size: 0.95rem;
+        }
+
+        .prompt-tab-container {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB; /* Tailwind gray-200 */
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.03); /* Subtle shadow */
+            width: 100%;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .tab-button {
+            padding: 0.875rem 1.25rem; /* Tailwind py-3.5 px-5 */
+            cursor: pointer;
+            background-color: #F9FAFB; /* Light gray for inactive tabs */
+            color: #4B5563; /* Medium gray for text */
+            border: none;
+            border-right: 1px solid #E5E7EB;
+            font-size: 0.9375rem; /* Slightly smaller */
+            font-weight: 500;
+            flex-grow: 1;
+            text-align: center;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .tab-button:first-child {
+            border-top-left-radius: 0.5rem;
+        }
+        .tab-button:last-child {
+            border-right: none;
+            border-top-right-radius: 0.5rem;
+        }
+        .tab-button.active {
+            background-color: #FFFFFF; /* White for active tab */
+            color: #3B82F6; /* Tailwind blue-500 */
+            font-weight: 600;
+            border-bottom: 2px solid #3B82F6; /* Blue underline for active */
+            margin-bottom: -1px; 
+        }
+        .tab-button:not(.active):hover {
+            background-color: #F3F4F6; /* Slightly darker gray on hover for inactive */
+        }
+        .prompt-content {
+            padding: 1.5rem; /* Tailwind p-6 */
+        }
+        .prompt-content.hidden {
+            display: none;
+        }
+        .prompt-box {
+            background-color: #F3F4F6; /* Tailwind gray-100 */
+            border-left: 4px solid #60A5FA; /* Tailwind blue-400 */
+            padding: 1rem;
+            margin-top: 0.75rem;
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.875rem; /* Tailwind text-sm */
+            white-space: pre-wrap;
+            overflow-x: auto;
+            color: #1F2937;
+            text-align: left;
+            max-height: 450px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        .user-input-placeholder {
+            background-color: #DBEAFE; /* Tailwind blue-200 */
+            color: #1E40AF; /* Tailwind blue-800 */
+            padding: 0.2rem 0.45rem;
+            border-radius: 0.25rem; /* Tailwind rounded-sm */
+            font-style: italic;
+            font-weight: 500;
+            display: inline-block;
+            margin: 0.1rem 0;
+        }
+        .activity-box {
+            background-color: #F3F4F6; /* Tailwind gray-100 */
+            border: 1px solid #E5E7EB; /* Tailwind gray-200 */
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 0.5rem; /* Tailwind rounded-lg */
+            text-align: center; /* Center align activity box content */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        }
+        .activity-box p, .activity-box strong.activity-title {
+             text-align: center; /* Ensure text inside is centered */
+        }
+        .activity-box strong.activity-title {
+            font-size: 1.25rem; /* Tailwind text-xl */
+            color: #111827; /* Darkest gray */
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        .quick-nav {
+            position: fixed;
+            bottom: 20px; /* Increased distance from bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.85); /* More opaque white */
+            backdrop-filter: blur(10px); /* Stronger blur */
+            padding: 0.5rem; /* Tailwind p-2 */
+            border-radius: 2rem; /* More rounded (pill shape) */
+            border: 1px solid #E5E7EB; /* Subtle border */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Softer, more modern shadow */
+            z-index: 100;
+            display: flex;
+            gap: 0.5rem; /* Tailwind space-x-2 */
+        }
+        .quick-nav a {
+            padding: 0.5rem 0.875rem; /* Tailwind py-2 px-3.5 */
+            text-decoration: none;
+            color: #374151; /* Medium gray */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            font-weight: 500;
+            border-radius: 1.5rem; /* Rounded inner buttons */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .quick-nav a:hover {
+            background-color: #E5E7EB; /* Light gray bg on hover */
+            color: #1F2937; /* Darker text on hover */
+        }
+        .quick-nav a.active-nav-link { /* Optional: for current slide indication */
+             background-color: #3B82F6;
+             color: #FFFFFF;
+        }
+
+        .highlight-blue { color: #2563EB; font-weight: 600; } /* Tailwind blue-600 */
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem; /* Tailwind p-8 */
+            border-top: 1px solid #E5E7EB; /* Tailwind gray-200 */
+            color: #6B7280; /* Tailwind gray-500 */
+            background-color: #FFFFFF; /* White background */
+            font-size: 0.875rem; /* Tailwind text-sm */
+        }
+        .copy-button {
+            background-color: #3B82F6; /* Tailwind blue-500 */
+            color: white;
+            border: none;
+            padding: 0.625rem 1rem; /* Tailwind py-2.5 px-4 */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            font-weight: 500;
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            cursor: pointer;
+            margin-top: 1rem;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background-color: #2563EB; /* Tailwind blue-600 */
+        }
+        .single-prompt-container { /* Used for marketing material prompts */
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-full">
+        <div class="quick-nav">
+            <a href="#slide1">1</a> <a href="#slide2">2</a> <a href="#slide3">3</a> <a href="#slide4">4</a> <a href="#slide5">5</a>
+            <a href="#slide6">6</a> <a href="#slide7">7</a> <a href="#slide8">8</a> <a href="#slide9">9</a> <a href="#slide10">10</a>
+        </div>
+
+        <section id="slide1" class="slide bg-accent"> 
+            <div class="hero-background-image-container">
+                </div>
+            <div class="slide-content">
+                <h1 class="hero-title">USP ja Storytelling</h1>
+                <p class="hero-slogan">Loodud selleks, et aidata Eesti turismiettevõtetel särada!</p>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                </svg>
+                <a href="https://www.linkedin.com/in/allanvalm/" target="_blank" rel="noopener noreferrer" class="hero-linkedin">Allan Valm</a>
+            </div>
+            <div class="hero-logo">
+                <img src="/eis/EIS-EL-kaasrahastanud-kaksiklogod.png" alt="EIS ja EU kaasrahastanud logo">
+            </div>
+        </section>
+
+        <section id="slide2" class="slide"> <div class="slide-content">
+                 <h2 class="content-title">Soojendus - Mis on tõeliselt unikaalne?</h2>
+                <div class="activity-box">
+                    <strong class="activity-title">Tiimiarutelu:</strong>
+                    <p>Mõelge mõnele B2B teenusele, mis on teile hiljuti muljet avaldanud oma <strong class="highlight-blue">unikaalse lähenemise või väärtusega.</strong></p>
+                    <p>Mis tegi selle eriliseks? Miks see meelde jäi?</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide3" class="slide"> <div class="slide-content">
+                <div class="intro-box">
+                    <p><strong>Miks see tööriist ja see samm on olulised?</strong></p>
+                    <p>Selge USP ja veenev lugu on teie B2B edu vundament. See struktureeritud lähenemine aitab teil kiiremini ja tõhusamalt jõuda selguseni, mis eristab teid konkurentidest ja kõnetab teie ideaalklienti. Teie (koolitusel osalev tiim) olete selle protsessi Kangelased, ja see tööriist on teie Juhendaja teekonnal eristuva ja meeldejääva sõnumini!</p>
+                </div>
+                <h2 class="content-title">Mis on unikaalne müügiargument (USP)?</h2>
+                <p>Sinu <strong class="highlight-blue">selge, eristuv ja veenev põhjus</strong>, miks rahvusvaheline äriürituste korraldaja peaks valima just <strong class="highlight-blue">SINU</strong> Eesti teenuse oma konverentsi, seminari või tippjuhtkonna retriidi jaoks.</p>
+                <h3 class="section-subtitle mt-6">Miks see on B2B turismis kriitiline?</h3>
+                <ul class="custom-list list-disc">
+                    <li>Eristab sind mürarikkal turul.</li>
+                    <li>Kõnetab sinu <strong class="highlight-blue">ideaalklienti</strong>.</li>
+                    <li>Kommunikeerib selgelt sinu pakutavat <strong class="highlight-blue">erilist väärtust</strong>.</li>
+                </ul>
+                <p class="mt-6"><strong class="highlight-blue">Näide:</strong> "Ainus Eesti konverentsikeskus, mis pakub spetsiaalselt tehnoloogiaettevõtetele suunatud seminare koos praktiliste töötubadega kohalikes idufirmades, ühendades õppimise reaalse innovatsioonikeskkonnaga."</p>
+                <h3 class="section-subtitle mt-6">Kuidas defineerida?</h3>
+                <p>1. Sinu "MIKS?"</p>
+                <p>2. Sinu B2B kliendi kriitiline VAJADUS/PROBLEEM.</p>
+                <p>3. Sinu UNIKAALNE lahendus.</p>
+            </div>
+        </section>
+
+        <section id="slide4" class="slide"> <div class="slide-content">
+                <h2 class="content-title">USP töötuba: Esimese mustandi loomine</h2>
+                <p class="text-center mb-6">Kasuta oma varasemate koolituspäevade võtmeinfot. Vali oma uue B2B teenuse fookusele vastav AI prompt.</p>
+                <div class="activity-box">
+                    <strong class="activity-title">Tiimi ülesanne:</strong>
+                    <p>1. <strong>Mõttetöö enne AI-d:</strong> Enne AI-ga alustamist sõnastage oma tiimiga selgelt, mis on see *üks peamine asi*, milles teie pakutav teenus on parem või erilisem kui teie nimetatud konkurentide oma, just teie kirjeldatud sihtkliendi vaatenurgast?</p>
+                    <p>2. Arutage ja täitke lüngad valitud AI promptis.</p>
+                    <p>3. (Valikuline) Sisestage täidetud prompt AI tööriista ja vaadake soovitusi.</p>
+                    <p>4. Sõnastage üks kõige tugevam USP lause mustand.</p>
+                </div>
+                
+                <div class="prompt-tab-container" id="usp-prompt-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="usp-conf" role="tab" aria-controls="usp-conf-content" aria-selected="true">Prompt A: KONVERENTSID/SEMINARID</button>
+                        <button class="tab-button" data-tab="usp-top" role="tab" aria-controls="usp-top-content" aria-selected="false">Prompt B: TIPPJUHTKONNA RETRIIDID</button>
+                    </div>
+                    <div id="usp-conf-content" class="prompt-content" role="tabpanel" aria-labelledby="usp-conf-tab">
+                        <h3 class="prompt-group-title">AI Prompt konverentside/seminaride USP loomiseks</h3>
+                        <div class="prompt-box" id="usp-conf-ee-text-s3">
+*ROLL*: Sa oled kogenud B2B turundusstrateeg, spetsialiseerunud MICE (Meetings, Incentives, Conferences, Exhibitions) sektorile Baltikumis ja Soomes. Sinu ülesanne on aidata Eesti turismiettevõttel sõnastada võimas USP.
+
+*TAUSTINFO ETTEVÕTTE KOHTA*:
+Meie Eesti ettevõte (edaspidi "meie") pakub <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt oma ettevõtte põhiteenust konverentside/seminaride segmendis. Näiteks: "kaasaegseid konverentsiruume koos spaateenustega Tartu kesklinnas, nagu V Spa" VÕI "unikaalset looduslähedast seminarikeskust Lahemaal koos meeskonnatöö töötubadega".]</span>
+Meie "MIKS" (Golden Circle): <span class="user-input-placeholder">[Sinu sisend: Mis on teie sügavam eesmärk ja kirg selle teenuse pakkumisel? Näiteks: "Luua inspireerivaid ja tulemuslikke kohtumispaiku, kus inimesed saavad tõeliselt ühenduda ja uusi ideid genereerida." VÕI "Pakkuda tasakaalu intensiivse töö ja meeldejääva Eesti kogemuse vahel, et ärikliendid lahkuksid värskena ja motiveerituna."]</span>
+Meie peamised teenuseomadused/eripärad: <span class="user-input-placeholder">[Sinu sisend: Loetle 3-5 kõige olulisemat omadust või eripära, mis on olulised konverentsi/seminari korraldajale. Näiteks: "Paindlikud ja hästivarustatud saalid kuni 300 inimesele, tipptasemel AV-tehnika ja tehniline tugi, kvaliteetne catering kohalikust Eesti toorainest, professionaalne projektijuhtimine igal sammul, lisateenused (nt ekskursioonid Setomaale, rabamatkad, kontaktid kohalike teadlastega)".]</span>
+Meie peamised konkurendid on: <span class="user-input-placeholder">[Sinu sisend: Kes on teie peamised konkurendid sarnaste teenuste pakkumisel Eestis, Lätis, Leedus või Soomes? Näiteks: "Radisson Blu hotellid Tallinnas ja Riias, Helsingi Messukeskus, Jurmala spaahotellid konverentsivõimalustega."]</span>
+
+*SIHTKLIENT (B2B PERSOONA)*:
+Meie sihtklient on <span class="user-input-placeholder">[Sinu sisend: Kirjelda oma ideaalset B2B klienti. Kirjelda tema rolli, asukohta, vastutusala ja peamisi otsusekriteeriume. Näiteks: "Polina, 39, projektijuht Läti MICE agentuuris 'Creative Events Baltics', kes korraldab rahvusvahelistele tehnoloogia- ja meditsiiniettevõtetele (50-200 osalejat) seminare ja konverentse Baltikumis. Ta otsib usaldusväärseid, paindlikke ja loovaid partnereid, kes pakuvad laitmatut teenust, läbipaistvat kommunikatsiooni ja aitavad luua kliendile 'wow'-efekti."]</span>
+Nende peamine VAJADUS/PROBLEEM/SOOVITUD EDASISamm (JTBD), mida meie lahendame: <span class="user-input-placeholder">[Sinu sisend: Kirjelda tema suurimat FRUSTRATSIOONI (mida ta püüab vältida) JA peamist SOOVI (millist progressi ta otsib) seoses konverentside/seminaride korraldamisega Eestis. Näiteks Polina jaoks: Frustratsioon - ebausaldusväärsed kohalikud partnerid, standardlahendused ja logistilised viperused. Soov/JTBD - "Aita mul leida Eestis erakordne ja sujuvalt toimiv lahendus, mis vaimustaks mu rahvusvahelist klienti, säästaks minu aega ja närve ning tugevdaks minu kui tippkorraldaja mainet."]</span>
+
+*ÜLESANNE*:
+Aita meil koostada 3 erinevat B2B Unikaalset Müügiargumenti (USP-d) meie Eesti konverentsi/seminariteenusele, sihtides ülalmainitud B2B persoonat.
+Iga USP peaks olema:
+1.  *Selge ja lühike*: Üks kuni kaks lauset.
+2.  *Kliendikeskne*: Rõhuma kasule, mida klient saab.
+3.  *Eristuv*: Esile tooma, mis teeb meid konkurentidest paremaks või teistsuguseks just selle kliendi jaoks.
+4.  *Usutav*: Põhinema meie reaalsetel tugevustel ja omadustel.
+5.  *Konkreetne*: Vältima üldiseid ja mittemidagiütlevaid väiteid.
+
+Paku USP variante, mis rõhutavad erinevaid aspekte.
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('usp-conf-ee-text-s3')">Kopeeri</button>
+                    </div>
+                    <div id="usp-top-content" class="prompt-content hidden" role="tabpanel" aria-labelledby="usp-top-tab">
+                        <h3 class="prompt-group-title">AI Prompt tippjuhtkonna retriitide USP loomiseks</h3>
+                        <div class="prompt-box" id="usp-top-ee-text-s3">
+*ROLL*: Sa oled tipptasemel B2B turunduskonsultant, kes on spetsialiseerunud luksuslikele ja eksklusiivsetele äriüritustele, eriti tippjuhtkonna retriitidele Põhjamaade ja Baltikumi turul. Sinu eesmärk on aidata Eesti turismiettevõttel luua vastupandamatu USP.
+
+*TAUSTINFO ETTEVÕTTE KOHTA*:
+Meie Eesti ettevõte (edaspidi "meie") pakub <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt oma ettevõtte põhiteenust tippjuhtkonna retriitide segmendis. Näiteks: "eksklusiivset ja privaatset mõisakompleksi Saaremaal koos personaalsete teenustega" VÕI "luksuslikke ja diskreetseid kohtumisi võimaldavat butiikhotelli Tallinna vanalinnas, mis on spetsialiseerunud väikeste juhtgruppide (kuni 15 inimest) teenindamisele".]</span>
+Meie "MIKS" (Golden Circle): <span class="user-input-placeholder">[Sinu sisend: Mis on teie sügavam eesmärk ja kirg selle teenuse pakkumisel? Näiteks: "Pakkuda juhtidele inspireerivat ja segamatut keskkonda strateegiliste otsuste langetamiseks ja meeskonnasidemete tugevdamiseks sügaval Eesti looduses." VÕI "Luua unustamatuid ja diskreetseid kogemusi, mis ületavad ka kõige nõudlikuma ärikliendi ootusi, kombineerides Eesti külalislahkuse maailmatasemel teenindusega."]</span>
+Meie peamised teenuseomadused/eripärad: <span class="user-input-placeholder">[Sinu sisend: Loetle 3-5 kõige olulisemat omadust või eripära, mis on tippjuhtide jaoks kriitilised. Rõhuta privaatsust, eksklusiivsust, turvalisust, personaalsust. Näiteks: "Täielik privaatsus ja konfidentsiaalsus (kogu kompleks ainult ühele grupile), personaalne tippkoka teenus kohalikust toorainest, 24/7 concierge, turvalised ja modernsed koosolekuruumid, unikaalsed kohalikud elamused (nt privaatne purjetamine, kohtumine Eesti innovaatoritega, vaikusematkad)".]</span>
+Meie peamised konkurendid on: <span class="user-input-placeholder">[Sinu sisend: Kes on teie peamised konkurendid sarnaste tippjuhtkonna teenuste pakkumisel? Näiteks: "Teised Eesti luksusmõisad ja -villad, tippklassi butiikhotellid Helsingis või Stockholmis, rahvusvahelised luksusketid Baltikumis."]</span>
+
+*SIHTKLIENT (B2B PERSOONA)*:
+Meie sihtklient on <span class="user-input-placeholder">[Sinu sisend: Kirjelda oma ideaalset B2B klienti. Kirjelda tema rolli, asukohta, vastutusala, ootusi ja hirme. Näiteks: "Anna, 45, tegevjuhi assistent Soome suurettevõttes 'Nordic Solutions Group', kes korraldab iga-aastast juhatuse strateegiaretriiti (10-15 osalejat). Ta otsib täielikku diskreetsust, laitmatut teenindust ja unikaalset keskkonda, mis peegeldaks ettevõtte staatust ja võimaldaks segamatut keskendumist. Tema suurim hirm on igasugune tõrge korralduses, privaatsuse rikkumine või standardne, igav kogemus."]</span>
+Nende peamine VAJADUS/PROBLEEM/SOOVITUD EDASISamm (JTBD), mida meie lahendame: <span class="user-input-placeholder">[Sinu sisend: Kirjelda tema suurimat FRUSTRATSIOONI (mida ta püüab vältida) JA peamist SOOVI (millist progressi ta otsib) seoses tippjuhtkonna retriidi korraldamisega. Näiteks Anna jaoks: Frustratsioon - ajakulukas otsing ja risk ebakvaliteetse või ebaturvalise teenusepakkujaga. Soov/JTBD - "Aita mul leida ja broneerida Eestis erakordne, turvaline ja inspireeriv koht, mis ületaks mu juhtkonna ootused, tagaks täieliku privaatsuse strateegiliseks tööks ja pakuks unikaalseid Eesti elamusi, nii et ma saaksin keskenduda muudele ülesannetele ja olla kindel retriidi õnnestumises."]</span>
+
+*ÜLESANNE*:
+Aita meil koostada 3 erinevat B2B Unikaalset Müügiargumenti (USP-d) meie Eesti tippjuhtkonna retriiditeenusele, sihtides ülalmainitud B2B persoonat.
+Iga USP peaks olema:
+1.  *Selge ja lühike*: Üks kuni kaks lauset.
+2.  *Kliendikeskne*: Rõhuma kasule, mida klient saab.
+3.  *Eristuv*: Esile tooma, mis teeb meid konkurentidest paremaks või teistsuguseks just selle kliendi jaoks.
+4.  *Usutav*: Põhinema meie reaalsetel tugevustel ja omadustel.
+5.  *Eksklusiivne ja prestiižne toon*: Peegeldama teenuse kõrgetasemelisust.
+
+Paku USP variante, mis rõhutavad erinevaid aspekte.
+                        </div>
+                         <button class="copy-button" onclick="copyToClipboard('usp-top-ee-text-s3')">Kopeeri</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide5" class="slide"> <div class="slide-content">
+                <h2 class="content-title">USP jagamine ja tagasiside</h2>
+                <div class="activity-box">
+                    <strong class="activity-title">Vabatahtlikud tiimid jagavad:</strong>
+                    <p>Millised 2-3 tiimi sooviksid jagada oma kõige tugevamat USP mustandit?</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide6" class="slide"> <div class="slide-content">
+                <h2 class="content-title">Sissejuhatus storytellingusse StoryBrandiga</h2>
+                <h3 class="section-subtitle">Miks StoryBrand sinu B2B USP jaoks?</h3>
+                <p>See on lihtne 7-osaline raamistik, mis muudab sinu sõnumi <strong class="highlight-blue">ettevõttekesksest kliendikeskseks</strong>.</p>
+                <p>Põhiidee: Sinu B2B klient on <strong class="highlight-blue">Hero</strong>. Sinu Eesti ettevõte on tema usaldusväärne <strong class="highlight-blue">Guide</strong>.</p>
+                <h3 class="section-subtitle mt-6">Kasu B2B-s:</h3>
+                <ul class="custom-list list-disc">
+                    <li>Loob usaldust ja näitab empaatiat.</li>
+                    <li>Lihtsustab keerukaid teenuseid.</li>
+                    <li>Ühendab kliendiga emotsionaalsel tasandil.</li>
+                </ul>
+                <p class="mt-6"><strong class="highlight-blue">StoryBrand 7 elementi:</strong> A <span class="highlight-blue">Character</span> has a <span class="highlight-blue">Problem</span> and meets a <span class="highlight-blue">Guide</span> who gives them a <span class="highlight-blue">Plan</span> and <span class="highlight-blue">Calls them to Action</span>, that helps them avoid <span class="highlight-blue">Failure</span> and ends in <span class="highlight-blue">Success</span>.</p>
+            </div>
+        </section>
+
+        <section id="slide7" class="slide"> <div class="slide-content">
+                <h2 class="content-title">Storytelling töötuba: Sinu B2B teenuse lugu</h2>
+                 <p class="text-center mb-6">Võta oma B2B USP. Nüüd põimime selle lühikeseks narratiiviks, kasutades StoryBrand raamistikku ja AI abi.</p>
+                <div class="activity-box">
+                    <strong class="activity-title">Tiimi ülesanne:</strong>
+                    <p>1. Arutage, kuidas teie USP aitab <strong class="highlight-blue">Guide</strong>'ina klienti (<strong class="highlight-blue">Hero</strong>), arvestades tema tuvastatud vajadusi ja probleeme.</p>
+                    <p>2. Mõelge läbi lihtne ja selge Plaan (3-4 sammu), mida oma kliendile pakute.</p>
+                    <p>3. Täitke lüngad valitud AI StoryBrand promptis.</p>
+                    <p>4. Sõnastage lühike B2B narratiivi mustand (100-150 sõna).</p>
+                </div>
+                <div class="prompt-tab-container" id="story-prompt-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="story-conf" role="tab" aria-controls="story-conf-content" aria-selected="true">Prompt A: LUGU KONVERENTSIDELE/SEMINARIDELE</button>
+                        <button class="tab-button" data-tab="story-top" role="tab" aria-controls="story-top-content" aria-selected="false">Prompt B: LUGU TIPPJUHTKONNA RETRIITIDELE</button>
+                    </div>
+                    <div id="story-conf-content" class="prompt-content" role="tabpanel" aria-labelledby="story-conf-tab">
+                        <h3 class="prompt-group-title">AI Prompt konverentside/seminaride loo loomiseks</h3>
+                        <div class="prompt-box" id="story-conf-ee-text-s6">
+*ROLL*: Sa oled StoryBrand Sertifitseeritud Giid, kellel on sügav kogemus B2B turundusnarratiivide loomisel MICE sektori jaoks, eriti konverentsi- ja seminarikorraldajatele Baltikumis ja Soomes.
+
+*LÄHTEANDMED*:
+Meie Eesti turismiteenuse B2B USP on: <span class="user-input-placeholder">[Sinu sisend: Sisesta oma varem koostatud ja parimaks tunnistatud USP konverentsidele/seminaridele. See peab olema selge ja kliendikeskne. Näiteks: "Ainus Tartu konverentsikeskus, mis ühendab tipptasemel tehnika, personaalse teeninduse ja inspireeriva akadeemilise õhkkonna, tagades teadusürituste sujuva kulgemise ja osalejate rahulolu."]</span>
+Meie sihtklient (Hero) on: <span class="user-input-placeholder">[Sinu sisend: Kirjelda oma sihtklienti (Hero) konverentside/seminaride kontekstis. Nimeta tema roll, eesmärgid ja suurimad hirmud seoses ürituse korraldamisega. Näiteks: "Toomas, 49, Tartu Ülikooli professor ja rahvusvahelise neuroteaduse konverentsi peakorraldaja (150+ osalejat). Tema eesmärk on pakkuda kolleegidele maailmatasemel teaduslikku programmi ja laitmatut korraldust, kuid ta kardab tehnilisi viperusi ja logistilist segadust, mis võiksid kahjustada tema ja ülikooli mainet."]</span>
+Peamine SISEMINE probleem, millega Hero silmitsi seisab (Internal Problem): <span class="user-input-placeholder">[Sinu sisend: Kirjelda Hero sisemist võitlust, frustratsiooni või kahtlust. Mida ta tunneb? Näiteks Toomas: "Ma tunnen tohutut pinget ja vastutust. Ma kardan, et midagi läheb tehniliselt valesti just siis, kui esineb Nobeli preemia laureaat, ja ma jään rahvusvaheliste kolleegide ees piinlikku olukorda."]</span>
+Peamine VÄLINE probleem, millega Hero silmitsi seisab (External Problem): <span class="user-input-placeholder">[Sinu sisend: Kirjelda Hero konkreetset välist takistust. Mis teda reaalselt segab? Näiteks Toomas: "Mul on raske leida Tartus konverentsipaika, mis suudaks tagada nii tipptasemel tehnilise võimekuse (nt hübriidkonverentsi võimalus), professionaalse kohapealse toe kui ka inspireeriva keskkonna, jäädes samas teadusrahade piiridesse."]</span>
+Meie kui JUHENDAJA (Guide) pakume PLAANI (Plan): <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt 3-4 lihtsat sammu, kuidas klient saab sinuga koostööd alustada ja mida ta võib oodata. See peab olema selge ja vähendama ebakindlust. Näiteks: "1. Tasuta konsultatsioon teie konverentsi vajaduste ja eesmärkide täpseks mõistmiseks. 2. Kohandatud lahenduspaketi ja detailse tegevuskava koostamine. 3. Pühendunud projektijuht, kes on teie partneriks kogu protsessi vältel. 4. Laitmatu tehniline teostus ja tugi kohapeal."]</span>
+EDU (Success), mida Hero saavutab tänu meile: <span class="user-input-placeholder">[Sinu sisend: Milline näeb välja Hero elu või töö, kui ta on sinu abiga edukas? Kuidas tema staatus paraneb? Näiteks Toomas: "Toomas korraldab eduka ja rahvusvaheliselt tunnustatud konverentsi, saab kiitust nii osalejatelt kui ka ülikooli juhtkonnalt. Tema maine teadlasena ja korraldajana kasvab. Ta tunneb end kindlalt ja rahulolevana, et sai keskenduda sisule, mitte tehnilistele muredele."]</span>
+EBAÕNNESTUMINE (Failure), mida Hero väldib tänu meile: <span class="user-input-placeholder">[Sinu sisend: Mis on kaalul? Mis juhtub, kui Hero ei kasuta sinu abi? Näiteks Toomas: "Konverents võib takerduda tehnilistesse probleemidesse, esinejad ja osalejad on rahulolematud, ülikooli maine saab kahjustada ja Toomas tunneb end läbikukkununa."]</span>
+
+*ÜLESANNE*:
+Koosta lühike ja mõjuv narratiivi lõik (umbes 100-150 sõna) meie veebisaidi avalehele või teenuste lehele, mis on suunatud konverentsi/seminari korraldajatele.
+Narratiiv peaks:
+1.  Algama Hero ja tema Probleemiga (nii sisemine kui väline), näidates empaatiat.
+2.  Tutvustama meid kui autoriteetset ja empaatilist Guide'i, kes pakub selget Plaani.
+3.  Sisaldama selget Üleskutset Tegevusele (Call to Action), mis on Hero jaoks loogiline järgmine samm.
+4.  Maalima pildi Edukast tulemusest ja sellest, kuidas välditakse Ebaõnnestumist.
+
+Toon: Professionaalne, empaatiline, lahenduskeskne ja usaldust äratav.
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('story-conf-ee-text-s6')">Kopeeri</button>
+                    </div>
+                    <div id="story-top-content" class="prompt-content hidden" role="tabpanel" aria-labelledby="story-top-tab">
+                        <h3 class="prompt-group-title">AI Prompt tippjuhtkonna retriitide loo loomiseks</h3>
+                        <div class="prompt-box" id="story-top-ee-text-s6">
+*ROLL*: Sa oled StoryBrand Sertifitseeritud Giid ja tipptasemel kommunikatsioonikonsultant, kes on spetsialiseerunud luksuslikele B2B teenustele, eriti eksklusiivsetele tippjuhtkonna retriitidele. Sinu ülesanne on luua veenev narratiiv Eesti turismiettevõttele.
+
+*LÄHTEANDMED*:
+Meie Eesti turismiteenuse B2B USP on: <span class="user-input-placeholder">[Sinu sisend: Sisesta oma varem koostatud ja parimaks tunnistatud USP tippjuhtkonna retriitidele. See peab olema eksklusiivne ja väärtust rõhutav. Näiteks: "Ainus Eesti eraldatud luksusmõis, mis tagab täieliku konfidentsiaalsuse, rätsepatööna valmivad elamused ja inspireeriva keskkonna Põhjamaade tippjuhtide strateegilisteks kohtumisteks."]</span>
+Meie sihtklient (Hero) on: <span class="user-input-placeholder">[Sinu sisend: Kirjelda oma sihtklienti (Hero) tippjuhtkonna ürituste kontekstis. Nimeta tema roll, vastutusala, suurimad ootused ja hirmud seoses ürituse korraldamisega. Näiteks: "Anna, 45, Soome rahvusvahelise tehnoloogiaettevõtte tegevjuhi parem käsi, vastutab iga-aastase 10-liikmelise juhatuse strateegiaretriidi diskreetse ja laitmatu korraldamise eest. Ta ootab täiuslikku teenindust, absoluutset privaatsust ja unikaalset kogemust, mis ületaks juhtkonna kõrgeid ootusi. Tema suurim hirm on igasugune konfidentsiaalsusleke, logistiline apsakas või standardne, igav elamus."]</span>
+Peamine SISEMINE probleem, millega Hero silmitsi seisab (Internal Problem): <span class="user-input-placeholder">[Sinu sisend: Kirjelda Hero sisemist pinget või ebakindlust. Mida ta sügaval sisimas tunneb? Näiteks Anna: "Ma tunnen tohutut pinget ja vastutust, et see üritus oleks täiuslik. Iga pisiasi peegeldab minu võimekust ja mõjutab otseselt minu ülemuse ja kogu juhatuse meeleolu ning töö tulemuslikkust. Ma ei tohi eksida."]</span>
+Peamine VÄLINE probleem, millega Hero silmitsi seisab (External Problem): <span class="user-input-placeholder">[Sinu sisend: Kirjelda Hero konkreetset välist takistust. Mis on tema jaoks raske? Näiteks Anna: "Mul on keeruline leida Eestist tõeliselt privaatset ja eksklusiivset kohta, mis vastaks tippjuhtide nõudmistele nii turvalisuse, tehnoloogilise varustatuse kui ka inspiratsiooni osas, ning leida partner, kes mõistaks meie vajadusi poolelt sõnalt ja tagaks täieliku diskreetsuse."]</span>
+Meie kui JUHENDAJA (Guide) pakume PLAANI (Plan): <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt 3-4 lihtsat sammu, kuidas klient saab sinuga koostööd alustada ja mis tagab talle kindlustunde. See peab olema selge ja rõhutama personaalsust. Näiteks: "1. Konfidentsiaalne esmakonsultatsioon teie erisoovide ja ootuste detailseks kaardistamiseks. 2. Personaalse retriidikava ja elamuspaketi rätsepatööna loomine koostöös teiega. 3. Diskreente ja laitmatu teostus meie kogenud meeskonna poolt, koos 24/7 concierge-teenusega. 4. Garanteeritud privaatsus ja meelerahu igas etapis."]</span>
+EDU (Success), mida Hero saavutab tänu meile: <span class="user-input-placeholder">[Sinu sisend: Milline näeb välja Hero elu või töö, kui ta on sinu abiga edukas? Kuidas tema positsioon tugevneb? Näiteks Anna: "Anna korraldab laitmatu ja meeldejääva tippjuhtide retriidi, saab siirast kiitust tegevjuhilt ja kogu juhatuselt. Juhtkond teeb olulisi strateegilisi otsuseid inspireerivas ja segamatus keskkonnas. Anna tunneb end väärtusliku ja asendamatu meeskonnaliikmena, kellele võib usaldada kõige vastutusrikkamaid ülesandeid."]</span>
+EBAÕNNESTUMINE (Failure), mida Hero väldib tänu meile: <span class="user-input-placeholder">[Sinu sisend: Mis on kaalul? Millised on negatiivsed tagajärjed, kui Hero ei vali sind? Näiteks Anna: "Retriit võib ebaõnnestuda turvaprobleemide, ebapiisava privaatsuse, kehva teeninduse või sobimatu atmosfääri tõttu, mis kahjustab ettevõtte mainet, rikub juhtkonna tuju ja seab Anna karjääri löögi alla."]</span>
+
+*ÜLESANNE*:
+Koosta lühike ja elegantne narratiivi lõik (umbes 100-150 sõna) meie eksklusiivse brošüüri või veebilehe jaoks, mis on suunatud tippjuhtide assistentidele ja C-taseme ürituste planeerijatele.
+Narratiiv peaks:
+1.  Algama Hero ja tema Probleemiga (nii sisemine kui väline), näidates sügavat mõistmist.
+2.  Tutvustama meid kui diskreetset, kogenud ja kompetentset Guide'i, kes pakub selget ja personaalset Plaani.
+3.  Sisaldama rafineeritud Üleskutset Tegevusele (Call to Action), mis sobib sellele sihtrühmale.
+4.  Maalima pildi Edukast tulemusest ja sellest, kuidas välditakse Ebaõnnestumist.
+
+Toon: Vaikselt enesekindel, eksklusiivne, personaalne ja usaldust sisendav.
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('story-top-ee-text-s6')">Kopeeri</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide8" class="slide"> <div class="slide-content">
+                <h2 class="content-title">Lugude jagamine ja mõju</h2>
+                <div class="activity-box">
+                    <strong class="activity-title">Vabatahtlikud tiimid jagavad:</strong>
+                    <p>Millised 2-3 tiimi sooviksid jagada oma B2B loo mustandit (100-150 sõna)?</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide9" class="slide"> <div class="slide-content">
+                <h2 class="content-title">Mida siit kaasa võtta?</h2>
+                <ul class="custom-list list-disc">
+                    <li>Terav B2B USP on sinu <strong class="highlight-blue">konkurentsieelis</strong>.</li>
+                    <li>StoryBrand muudab sinu USP <strong class="highlight-blue">meeldejäävaks ja veenvaks</strong>.</li>
+                    <li>Sinu klient (ürituste korraldaja) on alati <strong class="highlight-blue">Hero</strong>. Sina oled tark <strong class="highlight-blue">Guide</strong>.</li>
+                    <li>AI on sinu <strong class="highlight-blue">võimas abiline</strong>, mitte strateegia asendaja.</li>
+                    <li><strong class="highlight-blue">Korda ja testi!</strong> Sinu USP ja lugu arenevad koos klientidega.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="slide10" class="slide"> <div class="slide-content">
+                <h2 class="content-title">Sõnumi võimendamine: Müügi- ja turundusmaterjalid AI abil</h2>
+                <p class="text-center mb-6">Nüüd, kui sul on selge USP ja StoryBrand narratiivi alged, saad AI-d kasutada erinevate turundus- ja müügimaterjalide loomiseks. AI aitab sul kiiremini jõuda mustanditeni, mida saad seejärel oma brändi ja sihtgrupi jaoks täiustada.</p>
+                <h3 class="section-subtitle text-left">Olulised juhised AI kasutamisel:</h3>
+                <ul class="custom-list list-disc">
+                    <li><strong class="highlight-blue">Alati vaata üle ja kohanda:</strong> AI-genereeritud sisu on alguspunkt. Muuda see enda omaks, tagades vastavuse brändi häälele ja kliendi ootustele.</li>
+                    <li><strong class="highlight-blue">Ole spetsiifiline:</strong> Mida täpsem on sinu prompt, seda parema tulemuse saad. Kaasa oma USP, sihtkliendi kirjeldus (Hero), probleemid, sinu lahendus (Plan) ja soovitud tulemus (Success).</li>
+                    <li><strong class="highlight-blue">Katseta erinevaid variante:</strong> Palu AI-l luua mitu versiooni, et saaksid valida parima või kombineerida ideid.</li>
+                    <li><strong class="highlight-blue">Vähenda kliendi riski:</strong> Mõelge, kuidas teie loodud materjalid saavad vähendada potentsiaalse kliendi ebakindlust. Kas saate esile tuua garantiisid, varasemaid edulugusid, lihtsat koostööprotsessi või madala riskiga esimesi samme?</li>
+                </ul>
+
+                <div class="grid md:grid-cols-1 gap-6 mt-6">
+                    <div class="single-prompt-container">
+                        <h3 class="prompt-group-title">AI Prompt: LinkedIn postituste seeria (Ettevõtte lehele)</h3>
+                        <div class="prompt-box" id="linkedin-post-series-prompt">
+*ROLL*: Sa oled sotsiaalmeedia turunduse ekspert, kes on spetsialiseerunud B2B MICE sektorile Baltikumis ja Soomes. Sinu ülesanne on luua kaasahaarav LinkedIn postituste seeria, mis põhineb StoryBrand metoodikal.
+
+*LÄHTEANDMED POSTITUSTE SEERIALE*:
+Meie B2B USP on: <span class="user-input-placeholder">[Sinu sisend: Sisesta oma lõplik ja lihvitud USP. Näiteks: "Oleme ainus Eesti maahotell, mis pakub täielikult kohandatavaid seminaripakette koos ainulaadsete Lahemaa looduselamustega Soome tehnoloogiaettevõtetele, kes otsivad inspireerivat ja produktiivset keskkonda oma meeskonnaüritusteks."]</span>
+Meie StoryBrand narratiivi põhielemendid:
+- Hero: <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt oma Hero-t ja tema peamist probleemi/väljakutset. Kuidas saate alustada postitust küsimuse või tähelepanekuga, mis paneb teie Hero noogutama ja tundma: 'Jah, täpselt nii ma tunnengi!'? Näiteks: "Kas otsite oma järgmisele seminarile kohta, mis tõeliselt inspireeriks teie meeskonda ja pakuks midagi enamat kui tavalised koosolekuruumid Helsingis?"]</span>
+- Guide: Meie kui lahendus (meie ettevõte ja USP).
+- Plan: <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt oma lihtsat 3-4 sammulist koostööprotsessi. Näiteks: "1. Personaalne konsultatsioon teie vajaduste mõistmiseks. 2. Rätseppaketi ja elamusprogrammi koostamine. 3. Sujuv teostus ja täielik tugi kohapeal."]</span>
+- Success: <span class="user-input-placeholder">[Sinu sisend: Kirjelda, millise positiivse tulemuse Hero saavutab. Näiteks: "Inspireeriv ja tulemuslik seminar Lahemaa looduse keskel, tugevnenud meeskonnavaim, positiivne tagasiside osalejatelt ja tõestatud investeeringu tasuvus."]</span>
+- Failure: <span class="user-input-placeholder">[Sinu sisend: Kirjelda, mida Hero väldib tänu sinule. Näiteks: "Järjekordne igav ja mittemidagiütlev seminar, mis ei tekita elevust, ei paranda meeskonnatööd ega too oodatud tulemusi."]</span>
+
+*ÜLESANNE*:
+Koosta LinkedIn postituste seeria (3 postitust) meie ettevõtte lehele. Eesmärk: Tutvustada meie väärtuspakkumist rahvusvahelistele <span class="user-input-placeholder">[Sinu sisend: Vali sihtgrupp. Näiteks: "seminarikorraldajatele Soome tehnoloogia- ja tarkvaraettevõtetes" VÕI "konverentsiagentuuridele Lätis, kes otsivad unikaalseid kohti Eestis"]</span> ja suunata neid meie veebilehele/kontaktvormile.
+
+*Postitus 1 (Hero & Problem Focus)*:
+- Eesmärk: Haarata Hero tähelepanu, näidates sügavat mõistmist tema probleemidele.
+- Sisu: Alusta küsimusega või väitega, mis kõnetab Hero väljakutseid. Kirjelda lühidalt probleemi. Vihja, et lahendus on olemas.
+- Call to Action (CTA): Kutsu jagama oma kogemusi või suurimat väljakutset <span class="user-input-placeholder">[Sinu sisend: Lisa asjakohane teema. Näiteks: "tõeliselt meeldejääva ja tulemusliku seminari korraldamisel"]</span>.
+- Hashtagid: #B2BSeminarid #EestiTurism #MICEProfessionals #<span class="user-input-placeholder">[SinuNišš]</span> #<span class="user-input-placeholder">[SinuSihtTurg]</span>Events
+
+*Postitus 2 (Guide & Plan Focus)*:
+- Eesmärk: Esitleda end kui usaldusväärset partnerit ja näidata, kui lihtne on teiega koostööd teha.
+- Sisu: Tutvusta lühidalt oma ettevõtet kui Guide'i ja oma USP-d kui lahendust Hero probleemile. Selgita lühidalt oma Plan'i.
+- Call to Action (CTA): Suuna huvilised teie veebilehe <span class="user-input-placeholder">[Sinu sisend: Lisa link oma veebilehe spetsiifilisele alamlehele]</span> spetsiifilisele alamlehele.
+- Hashtagid: #EventProfsEstonia #SeminarSolutions #UniqueVenuesEstonia #<span class="user-input-placeholder">[SinuEttevõtteNimi]</span> #KoostööPartner
+
+*Postitus 3 (Success & CTA Focus)*:
+- Eesmärk: Näidata, millist edu Hero teiega saavutab ja motiveerida teda tegutsema.
+- Sisu: Kirjelda elavalt Success'i, mida Hero kogeb. Rõhuta, kuidas Failure'it välditakse. Maini, kuidas teie teenus aitab kliendil ebakindlust ületada.
+- Call to Action (CTA): Tee konkreetne ja madala riskiga pakkumine, nt kutsu broneerima tasuta konsultatsiooni, laadima alla <span class="user-input-placeholder">[Sinu sisend: Lisa oma lead magneti nimi ja link. Näiteks: "Meie seminarikorraldaja inspiratsioonijuhendit"]</span>, või küsima personaalset pakkumist.
+- Hashtagid: #SeminarSuccessEstonia #B2BGrowth #ChooseEstoniaForEvents #<span class="user-input-placeholder">[SinuUSPvõtmesõna]</span> #EventResults #TeamBuildingEstonia
+
+Toon: Kõigis postitustes professionaalne, enesekindel, empaatiline ja kliendikeskne.
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('linkedin-post-series-prompt')">Kopeeri</button>
+                    </div>
+
+                    <div class="single-prompt-container">
+                        <h3 class="prompt-group-title">AI Prompt: Müügimeili lühitutvustus (Külm kontakt)</h3>
+                        <div class="prompt-box" id="sales-email-prompt">
+*ROLL*: Sa oled B2B müügikirjade koostamise meister, kellel on eriline oskus luua lühikesi, kuid mõjuvaid sõnumeid MICE sektori otsustajatele Baltikumis ja Soomes.
+
+*LÄHTEANDMED MÜÜGIMEILILE*:
+Meie B2B USP on: <span class="user-input-placeholder">[Sinu sisend: Sisesta oma lõplik ja lihvitud USP. Näiteks: "Oleme ainus Eesti butiikhotell Tallinna südames, mis pakub tippjuhtide väikestele gruppidele (kuni 12 inimest) täielikku privaatsust, rätsepatööna valmivat personaalset teenindust ja kureeritud kohalikke kultuurielamusi, et tagada maksimaalne fookus ja inspiratsioon."]</span>
+Sihtklient (Hero): <span class="user-input-placeholder">[Sinu sisend: Kirjelda meili saajat ja tema potentsiaalset rolli ning vajadust. Näiteks: "Anna, Soome finantsettevõtte 'NordicFinance Oy' juhiabi, kes vastutab juhatuse (8-10 inimest) konfidentsiaalsete väljasõitude ja strateegiapäevade korraldamise eest."]</span>
+Hero peamine probleem/vajadus/JTBD, millele keskenduda: <span class="user-input-placeholder">[Sinu sisend: Vali üks konkreetne valupunkt, tugev soov või 'töö', mida klient üritab teha. Näiteks: "Paljud tippjuhid leiavad, et tavapärased hotellikeskkonnad ei paku piisavalt privaatsust ega inspiratsiooni tõeliselt sügavateks strateegilisteks aruteludeks. Nad otsivad kohta, kus saaks segamatult keskenduda ja samas kogeda midagi erilist."]</span>
+
+*ÜLESANNE*:
+Koosta lühike (max 100-120 sõna) ja lööv müügimeili sissejuhatav lõik. Meili eesmärk on tekitada huvi ja saada lühike (15-20 min) virtuaalne kohtumine, et tutvustada meie pakkumist detailsemalt.
+
+Meili struktuur peaks olema:
+1.  *Isikustatud pöördumine (kui võimalik)*: "Tere [Saaja nimi],"
+2.  *Konks/Huvi äratamine (Probleem/Insight)*: Alusta küsimusega või tähelepanekuga, mis on seotud Hero probleemi/vajaduse/JTBD-ga.
+3.  *Lühitutvustus ja USP kui Lahendus*: Esitle end lühidalt ja maini oma USP-d kui lahendust.
+4.  *Väärtuspakkumine/Kasu*: Too välja üks konkreetne kasu, mida Hero saaks koostööst.
+5.  *Selge ja madala riskiga Call to Action*: Paku välja konkreetne, lihtne ja madala riskiga järgmine samm.
+
+Toon: Viisakas, lugupidav, otsekohene, väärtust pakkuv ja empaatiline.
+Näiteks: "Tere Anna, Kas olete märganud, et teie juhatus otsib strateegiapäevadeks üha enam kohti, mis pakuksid nii täielikku privaatsust kui ka tõeliselt inspireerivat keskkonda, eemal tavapärastest koosolekuruumidest? Meie [Sinu ettevõtte nimi] Tallinnas oleme spetsialiseerunud just selliste eksklusiivsete ja personaalsete kogemuste loomisele tippjuhtide väikestele gruppidele. [Sinu USP lühidalt]. Kas oleksite valmis 15-minutiliseks kõneks sel nädalal, et kuulda lähemalt, kuidas saaksime aidata teil korraldada järgmise tõeliselt meeldejääva ja produktiivse juhatuse väljasõidu?"
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('sales-email-prompt')">Kopeeri</button>
+                    </div>
+
+                    <div class="single-prompt-container">
+                        <h3 class="prompt-group-title">AI Prompt: Veebilehe "Meist" sektsiooni uuendus (Kliendikeskne)</h3>
+                        <div class="prompt-box" id="about-us-prompt">
+*ROLL*: Sa oled StoryBrand metoodikale spetsialiseerunud sisulooja ja veebitekstide autor. Sinu ülesanne on muuta ettevõtte "Meist" sektsioon kliendikesksemaks ja kaasahaaravamaks.
+
+*LÄHTEANDMED "MEIST" SEKTSIOONI UUENDUSEKS*:
+Meie B2B USP on: <span class="user-input-placeholder">[Sinu sisend: Sisesta oma lõplik ja lihvitud USP. Näiteks: "Aitame Riia ja Helsingi konverentsikorraldajatel luua Eestis unustamatuid teaduskonverentse ja erialaseminare, pakkudes kaasaegset tehnikat, inspireerivat akadeemilist atmosfääri ja personaalset tuge igal sammul."]</span>
+Meie ettevõtte "MIKS" (Golden Circle): <span class="user-input-placeholder">[Sinu sisend: Mis on teie ettevõtte sügavam eesmärk, mis juhib teie tegevust? Näiteks: "Me usume, et suurepärased ideed sünnivad inspireerivas keskkonnas ja sujuvas koostöös. Meie kirg on luua tingimused, kus teadmised saavad vabalt levida ja inimesed luua tähendusrikkaid sidemeid."]</span>
+Meie sihtklient (Hero): <span class="user-input-placeholder">[Sinu sisend: Vali oma peamine sihtgrupp ja kirjelda teda lühidalt. Näiteks: "Professionaalsed konverentsikorraldajad ja akadeemiliste ürituste eestvedajad, kes otsivad usaldusväärset partnerit ja kvaliteetset konverentsipaika Eestis."]</span>
+Hero peamine probleem/väljakutse: <span class="user-input-placeholder">[Sinu sisend: Kirjelda lühidalt Hero peamist probleemi või eesmärki. Näiteks: "Soov korraldada mainekas ja sujuv teadusüritus või erialaseminar, mis vastaks nii osalejate kõrgetele ootustele kui ka eelarvele, kuid mure tehniliste lahenduste, kohapealse toe ja osalejate kaasamise pärast."]</span>
+Meie kui Guide'i roll ja Plan: <span class="user-input-placeholder">[Sinu sisend: Kuidas teie ettevõte aitab (Guide) ja milline on teie lihtne koostööprotsess (Plan)? Näiteks: "Oleme teie kogenud partner Eestis, kes mõistab rahvusvaheliste ürituste spetsiifikat. Meie protsess: 1. Sügavuti vajaduste analüüs ja eesmärkide seadmine. 2. Rätseplahenduse ja detailse tegevuskava koostamine. 3. Pidev ja proaktiivne tugi kogu ürituse planeerimise ja teostuse vältel."]</span>
+Soovitud tulemus (Success) Hero jaoks: <span class="user-input-placeholder">[Sinu sisend: Millise eduka tulemuse Hero saavutab? Näiteks: "Edukas, kõrgetasemeline ja murevabalt korraldatud konverents või seminar, mis tõstab tema ja tema organisatsiooni mainet, jätab osalejatele suurepärase mulje ja saavutab püstitatud eesmärgid."]</span>
+
+*ÜLESANNE*:
+Aita meil ümber sõnastada meie veebilehe 'Meist' (või 'Kes me oleme') sektsiooni sissejuhatav lõik (umbes 100-120 sõna). Praegune tekst keskendub liialt meie ajaloole ja teenuste loetelule. Uus versioon peaks olema kliendikeskne, järgides StoryBrand põhimõtteid ja peegeldades meie "Miks"-i.
+
+Uus "Meist" sektsiooni sissejuhatus peaks:
+1.  Algama Hero ja tema peamise väljakutse/eesmärgiga.
+2.  Positsioneerima sinu ettevõtte (Guide) kui empaatilise ja autoriteetse abistaja, kelle tegevust juhib selge "Miks" ja kes pakub lahendust (sinu USP).
+3.  Lühidalt vihjama sinu Plan'ile.
+4.  Maalima pildi Success'ist, mida klient sinuga koostöös saavutab.
+5.  Lõppema selge Call to Action'iga, mis suunab lugejat edasi.
+
+Toon: Usaldusväärne, empaatiline, professionaalne, selge, inspireeriv ja kutsuv.
+Näide struktuurist: "Kas olete [Hero kirjeldus], kes otsib võimalust korraldada [Hero eesmärk/lahendatav probleem]? Meie [Sinu ettevõtte nimi] usume, et [Sinu "MIKS" lühidalt]. Seepärast oleme pühendunud aitama teil luua [Sinu USP]. Meie [Sinu Plan lühidalt] abil tagame, et teie [Hero Success]. [Call to Action]."
+                        </div>
+                        <button class="copy-button" onclick="copyToClipboard('about-us-prompt')">Kopeeri</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Allan Valm koolitusmaterjalid. EIS teenusedisaini meistriklass.</p>
+            <p>Loodud selleks, et aidata Eesti turismiettevõtetel särada!</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Prompt kopeeritud lõikelauale!');
+            }).catch(err => {
+                console.error('Kopeerimine ebaõnnestus: ', err);
+                alert('Vabandust, kopeerimine ebaõnnestus.');
+            });
+        }
+
+        function initializeTabs(tabContainerId) {
+            const tabContainer = document.getElementById(tabContainerId);
+            if (!tabContainer) return;
+
+            const tabButtons = tabContainer.querySelectorAll('.tab-button');
+            const promptContents = tabContainer.querySelectorAll('.prompt-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    promptContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    button.classList.add('active');
+                    button.setAttribute('aria-selected', 'true');
+                    const tabId = button.dataset.tab;
+                    const activeContent = tabContainer.querySelector(`#${tabId}-content`);
+                    if (activeContent) {
+                        activeContent.classList.remove('hidden');
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTabs('usp-prompt-tabs');
+            initializeTabs('story-prompt-tabs');
+        });
+    </script>
+</body>
+</html>
